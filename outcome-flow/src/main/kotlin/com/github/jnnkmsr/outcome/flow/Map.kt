@@ -19,7 +19,8 @@ package com.github.jnnkmsr.outcome.flow
 import com.github.jnnkmsr.outcome.Failure
 import com.github.jnnkmsr.outcome.Outcome
 import com.github.jnnkmsr.outcome.Success
-import com.github.jnnkmsr.outcome.map
+import com.github.jnnkmsr.outcome.dropValue
+import com.github.jnnkmsr.outcome.mapValue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -27,8 +28,15 @@ import kotlinx.coroutines.flow.map
  * Maps the encapsulated [value][Success.value]s of an upstream [Success] using
  * the given [transform], while emitting upstream [Failure]s unchanged.
  */
-public inline fun <V, R, C> Flow<Outcome<V, C>>.map(
+public inline fun <V, R, C> Flow<Outcome<V, C>>.mapValue(
     crossinline transform: suspend (value: V) -> R,
 ): Flow<Outcome<R, C>> = map { outcome ->
-    outcome.map { value -> transform(value) }
+    outcome.mapValue { value -> transform(value) }
 }
+
+/**
+ * Returns a [Flow] of [Outcome]s with `Unit` [value][Success.value]s, while
+ * emitting upstream [Failure]s unchanged.
+ */
+public fun <V, C> Flow<Outcome<V, C>>.dropValue(): Flow<Outcome<Unit, C>> =
+    map { outcome -> outcome.dropValue() }
