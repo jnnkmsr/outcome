@@ -18,8 +18,8 @@ package com.github.jnnkmsr.outcome
 
 /**
  * Returns the encapsulated [value][Success.value] if `this` [Outcome] is a
- * [Success], or calls [onFailure] to handle a [Failure] and return a default
- * value.
+ * [Success], or calls [onFailure] to handle a [Failure] and return a
+ * replacement value.
  */
 public inline fun <V, C> Outcome<V, C>.use(
     onFailure: (failure: Failure<C>) -> V,
@@ -30,7 +30,7 @@ public inline fun <V, C> Outcome<V, C>.use(
 
 /**
  * Returns the result of [onSuccess] if `this` [Outcome] is a [Success], or
- * calls [onFailure] to handle a [Failure] and return a default return value.
+ * calls [onFailure] to handle a [Failure] and return a replacement value.
  */
 public inline fun <V, C, R> Outcome<V, C>.use(
     onSuccess: (value: V) -> R,

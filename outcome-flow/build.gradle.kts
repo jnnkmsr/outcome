@@ -34,7 +34,7 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("mavenJava") {
-                artifactId = "outcome"
+                artifactId = "outcome-flow"
 
                 from(components["java"])
 
@@ -52,5 +52,6 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation(libs.kotlin.coroutines)
+    api(project(":outcome-core"))
+    api(libs.kotlin.coroutines)
 }

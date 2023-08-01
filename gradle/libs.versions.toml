@@ -16,6 +16,7 @@
 
 [versions]
 android-activity = "1.8.0-alpha06"          # http://d.android.com/jetpack/androidx/releases/activity
+android-annotation = "1.7.0-alpha03"        # http://d.android.com/jetpack/androidx/releases/annotation
 android-core = "1.12.0-beta01"              # http://d.android.com/jetpack/androidx/releases/core
 android-lifecycle = "2.7.0-alpha01"         # http://d.android.com/jetpack/androidx/releases/lifecycle
 android-gradle = "8.2.0-alpha15"            # http://mvnrepository.com/artifact/com.android.tools.build/gradle?repo=google
@@ -28,6 +29,7 @@ kotlin = "1.9.0"                            # http://kotlinlang.org/docs/release
 kotlin-coroutines = "1.7.3"                 # http://github.com/Kotlin/kotlinx.coroutines
 
 [libraries]
+android-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "android-annotation" }
 android-core = { group = "androidx.core", name = "core-ktx", version.ref = "android-core" }
 android-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "android-lifecycle" }
 android-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "android-splashscreen" }

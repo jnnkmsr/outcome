@@ -1,9 +1,7 @@
 package com.github.jnnkmsr.outcome
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
+import androidx.annotation.RestrictTo
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * An [Outcome] encapsulates either a successful return [value][Success.value]
@@ -59,32 +57,12 @@ public inline fun <V, C> Outcome(
 }
 
 /**
- * Converts `this` [Flow] into a flow of [Outcome]s by encapsulating upstream
- * values into [Success] instances and converting upstream [Exception]s into
- * [Failure]s by invoking the given [catch] block.
- *
- * Upstream [CancellationException]s, thrown to cancel [Flow] collection, will
- * be safely rethrown downstream.
- *
- * Note that as opposed to _[Exception]s_, upstream _[Error]s_ will not be
- * caught by the [catch] block, but will be rethrown downstream.
- *
- * @param catch Callback that will be invoked to convert any [Exception] thrown
- *   upstream into a [Failure] instance.
- */
-public inline fun <V, C> Flow<V>.outcome(
-    crossinline catch: (Exception) -> Failure<C>,
-): Flow<Outcome<V, C>> = this
-    .map { value -> Success(value) }
-    .catch { throwable -> throwable.catchAsFailure(catch) }
-
-/**
  * Helper function to safely catch any uncaught [Exception] within coroutines.
  * Rethrows [CancellationException]s and [Error]s while converting [Exception]s
  * into [Failure]s by invoking the given [catch] block.
  */
-@PublishedApi
-internal inline fun <C> Throwable.catchAsFailure(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+public inline fun <C> Throwable.catchAsFailure(
     catch: (Exception) -> Failure<C>,
 ): Failure<C> = when (this) {
     is CancellationException -> throw this

@@ -16,11 +16,7 @@
 
 package com.github.jnnkmsr.outcome
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import java.lang.Exception
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Functional interface that can be implemented to convert caught [Exception]s
@@ -56,24 +52,3 @@ public fun <V, C> Outcome(
     handler: ExceptionHandler<C>,
     block: () -> V,
 ): Outcome<V, C> = Outcome(handler::invoke, block)
-
-
-/**
- * Converts `this` [Flow] into a flow of [Outcome]s by encapsulating upstream
- * values into [Success] instances and converting upstream [Exception]s into
- * [Failure]s by invoking the given [catch] block.
- *
- * Upstream [CancellationException]s, thrown to cancel [Flow] collection, will
- * be safely rethrown downstream.
- *
- * Note that as opposed to _[Exception]s_, upstream _[Error]s_ will not be
- * caught by the [catch] block, but will be rethrown downstream.
- *
- * @param handler An [ExceptionHandler] be [invoked][ExceptionHandler.invoke] to
- *   convert any [Exception] thrown upstream into a [Failure] instance.
- */
-public fun <V, C> Flow<V>.outcome(
-    handler: ExceptionHandler<C>
-): Flow<Outcome<V, C>> = this
-    .map { value -> Success(value) }
-    .catch { throwable -> throwable.catchAsFailure(handler::invoke) }

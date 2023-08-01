@@ -35,4 +35,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "OutcomeLibrary"
 include(":app")
-include(":outcome")
+include(":outcome-core")
+include(":outcome-flow")
