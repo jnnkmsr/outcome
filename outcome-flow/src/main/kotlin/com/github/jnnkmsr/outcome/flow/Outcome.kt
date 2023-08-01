@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.map
  * @param catch Callback that will be invoked to convert any [Exception] thrown
  *   upstream into a [Failure] instance.
  */
-public inline fun <V, C> Flow<V>.outcome(
+public inline fun <V, C> Flow<V>.asOutcome(
     crossinline catch: (Exception) -> Failure<C>,
 ): Flow<Outcome<V, C>> = this
     .map { value -> Success(value) }

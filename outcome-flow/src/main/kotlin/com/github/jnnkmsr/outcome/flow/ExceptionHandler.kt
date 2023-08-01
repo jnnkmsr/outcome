@@ -40,7 +40,7 @@ import kotlinx.coroutines.flow.map
  * @param handler An [ExceptionHandler] be [invoked][ExceptionHandler.invoke] to
  *   convert any [Exception] thrown upstream into a [Failure] instance.
  */
-public fun <V, C> Flow<V>.outcome(
+public fun <V, C> Flow<V>.asOutcome(
     handler: ExceptionHandler<C>,
 ): Flow<Outcome<V, C>> = this
     .map { value -> Success(value) }
