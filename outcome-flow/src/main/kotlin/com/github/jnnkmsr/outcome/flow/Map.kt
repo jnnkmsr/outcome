@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.map
  * Maps the encapsulated [value][Success.value]s of an upstream [Success] using
  * the given [transform], while emitting upstream [Failure]s unchanged.
  */
-public inline fun <V, C, R> Flow<Outcome<V, C>>.map(
+public inline fun <V, R, C> Flow<Outcome<V, C>>.map(
     crossinline transform: suspend (value: V) -> R,
 ): Flow<Outcome<R, C>> = map { outcome ->
     outcome.map { value -> transform(value) }

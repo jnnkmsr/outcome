@@ -20,7 +20,7 @@ package com.github.jnnkmsr.outcome
  * Returns the [Outcome] of the given [block] if `this` previous [Outcome] was
  * a [Success], or returns `this` [Failure].
  */
-public inline fun <V, C, R> Outcome<V, C>.use(
+public inline fun <V, R, C> Outcome<V, C>.use(
     block: (value: V) -> Outcome<R, C>,
 ): Outcome<R, C> = when (this) {
     is Success -> block(value)

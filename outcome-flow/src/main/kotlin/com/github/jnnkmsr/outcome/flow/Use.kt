@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.map
  * [Outcome] of the given [block] into the downstream [Flow], while emitting
  * upstream [Failure]s unchanged.
  */
-public inline fun <V, C, R> Flow<Outcome<V, C>>.use(
+public inline fun <V, R, C> Flow<Outcome<V, C>>.use(
     crossinline block: suspend (value: V) -> Outcome<R, C>,
 ): Flow<Outcome<R, C>> = map { outcome ->
     outcome.use { value -> block(value) }
