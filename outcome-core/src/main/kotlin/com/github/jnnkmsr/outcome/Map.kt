@@ -20,6 +20,6 @@ package com.github.jnnkmsr.outcome
  * Maps the encapsulated [value][Success.value] using the given [transform] if
  * `this` [Outcome] is a [Success], or returns `this` [Failure]
  */
-public inline fun <V, C, R> Outcome<V, C>.map(
+public inline fun <V, R, C> Outcome<V, C>.map(
     transform: (value: V) -> R,
 ): Outcome<R, C> = use { value -> Success(transform(value)) }

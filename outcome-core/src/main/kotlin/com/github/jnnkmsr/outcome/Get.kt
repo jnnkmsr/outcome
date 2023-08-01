@@ -21,9 +21,9 @@ package com.github.jnnkmsr.outcome
  * [Success], or calls [onFailure] to handle a [Failure] and return a
  * replacement value.
  */
-public inline fun <V, C> Outcome<V, C>.get(
-    onFailure: (failure: Failure<C>) -> V,
-): V = when (this) {
+public inline fun <V : R, R, C> Outcome<V, C>.getOrElse(
+    onFailure: (failure: Failure<C>) -> R,
+): R = when (this) {
     is Success -> value
     is Failure -> onFailure(this)
 }
@@ -32,7 +32,7 @@ public inline fun <V, C> Outcome<V, C>.get(
  * Returns the result of [onSuccess] if `this` [Outcome] is a [Success], or
  * calls [onFailure] to handle a [Failure] and return a replacement value.
  */
-public inline fun <V, C, R> Outcome<V, C>.get(
+public inline fun <V, R, C> Outcome<V, C>.getOrElse(
     onSuccess: (value: V) -> R,
     onFailure: (failure: Failure<C>) -> R,
 ): R = when (this) {
@@ -60,7 +60,7 @@ public inline fun <V, C> Outcome<V, C>.getOrNull(
  * [Success], or calls [onFailure] to handle the [Failure] and returns `null`
  * instead.
  */
-public inline fun <V, C, R> Outcome<V, C>.getOrNull(
+public inline fun <V, R, C> Outcome<V, C>.getOrNull(
     onSuccess: (value: V) -> R,
     onFailure: (failure: Failure<C>) -> Unit = {},
 ): R? = when (this) {

@@ -19,7 +19,7 @@ package com.github.jnnkmsr.outcome.flow
 import com.github.jnnkmsr.outcome.Failure
 import com.github.jnnkmsr.outcome.Outcome
 import com.github.jnnkmsr.outcome.Success
-import com.github.jnnkmsr.outcome.get
+import com.github.jnnkmsr.outcome.getOrElse
 import com.github.jnnkmsr.outcome.getOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -30,28 +30,18 @@ import kotlin.experimental.ExperimentalTypeInference
 /**
  * Converts `this` [Flow] into a [Flow] of the encapsulated
  * [value][Success.value]s if the upstream [Outcome] is a [Success], or calls
- * [onFailure] to handle upstream [Failure]s and emitting a replacement value
- * downstream.
- */
-public inline fun <V, C> Flow<Outcome<V, C>>.get(
-    crossinline onFailure: (failure: Failure<C>) -> V,
-): Flow<V> = map { outcome -> outcome.get(onFailure) }
-
-/**
- * Converts `this` [Flow] into a [Flow] of the encapsulated
- * [value][Success.value]s if the upstream [Outcome] is a [Success], or calls
  * [onFailure] to handle upstream [Failure]s.
  *
- * This is a more flexible overload, as [onFailure] may or may not emit values
+ * This is the most flexible getter, as [onFailure] may or may not emit values
  * downstream.
  *
  * @see transform
  */
 @OptIn(ExperimentalTypeInference::class)
-public inline fun <V, C> Flow<Outcome<V, C>>.get(
+public inline fun <V : R, R, C> Flow<Outcome<V, C>>.get(
     @BuilderInference
-    crossinline onFailure: suspend FlowCollector<V>.(failure: Failure<C>) -> Unit,
-): Flow<V> = transform { outcome ->
+    crossinline onFailure: suspend FlowCollector<R>.(failure: Failure<C>) -> Unit = {},
+): Flow<R> = transform { outcome ->
     when (outcome) {
         is Success -> emit(outcome.value)
         is Failure -> onFailure(outcome)
@@ -59,36 +49,14 @@ public inline fun <V, C> Flow<Outcome<V, C>>.get(
 }
 
 /**
- * Converts `this` [Flow] into a [Flow] of values returned by [onSuccess] if
- * the upstream [Outcome] is a [Success], or calls [onFailure] to handle
- * upstream [Failure]s and emit a replacement value downstream.
- */
-public inline fun <V, C, R> Flow<Outcome<V, C>>.get(
-    crossinline onSuccess: (value: V) -> R,
-    crossinline onFailure: (failure: Failure<C>) -> R,
-): Flow<R> = map { outcome -> outcome.get(onSuccess, onFailure) }
-
-/**
- * Converts `this` [Flow] into a [Flow] of values returned by [onSuccess] if
- * the upstream [Outcome] is a [Success], or calls [onFailure] to handle
- * upstream [Failure]s.
- *
- * This is a more flexible overload, as [onFailure] may or may not emit values
+ * Converts `this` [Flow] into a [Flow] of the encapsulated
+ * [value][Success.value]s if the upstream [Outcome] is a [Success], or calls
+ * [onFailure] to handle upstream [Failure]s and emitting a replacement value
  * downstream.
- *
- * @see transform
  */
-@OptIn(ExperimentalTypeInference::class)
-public inline fun <V, C, R> Flow<Outcome<V, C>>.get(
-    crossinline onSuccess: (value: V) -> R,
-    @BuilderInference
-    crossinline onFailure: suspend FlowCollector<R>.(failure: Failure<C>) -> Unit,
-): Flow<R> = transform { outcome ->
-    when (outcome) {
-        is Success -> emit(onSuccess(outcome.value))
-        is Failure -> onFailure(outcome)
-    }
-}
+public inline fun <V : R, R, C> Flow<Outcome<V, C>>.getOrElse(
+    crossinline onFailure: (failure: Failure<C>) -> R,
+): Flow<R> = map { outcome -> outcome.getOrElse(onFailure) }
 
 /**
  * Converts `this` [Flow] into a [Flow] of the encapsulated
@@ -98,13 +66,3 @@ public inline fun <V, C, R> Flow<Outcome<V, C>>.get(
 public inline fun <V, C> Flow<Outcome<V, C>>.getOrNull(
     crossinline onFailure: (failure: Failure<C>) -> Unit = {},
 ): Flow<V?> = map { outcome -> outcome.getOrNull(onFailure) }
-
-/**
- * Converts `this` [Flow] into a [Flow] of values returned by [onSuccess] if
- * the upstream [Outcome] is a [Success], or calls [onFailure] to handle
- * upstream [Failure]s and emit `null` downstream.
- */
-public inline fun <V, C, R> Flow<Outcome<V, C>>.getOrNull(
-    crossinline onSuccess: (value: V) -> R,
-    crossinline onFailure: (failure: Failure<C>) -> Unit = {},
-): Flow<R?> = map { outcome -> outcome.getOrNull(onSuccess, onFailure) }
