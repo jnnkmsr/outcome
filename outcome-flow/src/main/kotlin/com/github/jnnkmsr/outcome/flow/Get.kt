@@ -19,8 +19,8 @@ package com.github.jnnkmsr.outcome.flow
 import com.github.jnnkmsr.outcome.Failure
 import com.github.jnnkmsr.outcome.Outcome
 import com.github.jnnkmsr.outcome.Success
-import com.github.jnnkmsr.outcome.use
-import com.github.jnnkmsr.outcome.useOrNull
+import com.github.jnnkmsr.outcome.get
+import com.github.jnnkmsr.outcome.getOrNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.map
@@ -33,9 +33,9 @@ import kotlin.experimental.ExperimentalTypeInference
  * [onFailure] to handle upstream [Failure]s and emitting a replacement value
  * downstream.
  */
-public inline fun <V, C> Flow<Outcome<V, C>>.use(
+public inline fun <V, C> Flow<Outcome<V, C>>.get(
     crossinline onFailure: (failure: Failure<C>) -> V,
-): Flow<V> = map { outcome -> outcome.use(onFailure) }
+): Flow<V> = map { outcome -> outcome.get(onFailure) }
 
 /**
  * Converts `this` [Flow] into a [Flow] of the encapsulated
@@ -48,7 +48,7 @@ public inline fun <V, C> Flow<Outcome<V, C>>.use(
  * @see transform
  */
 @OptIn(ExperimentalTypeInference::class)
-public inline fun <V, C> Flow<Outcome<V, C>>.use(
+public inline fun <V, C> Flow<Outcome<V, C>>.get(
     @BuilderInference
     crossinline onFailure: suspend FlowCollector<V>.(failure: Failure<C>) -> Unit,
 ): Flow<V> = transform { outcome ->
@@ -63,10 +63,10 @@ public inline fun <V, C> Flow<Outcome<V, C>>.use(
  * the upstream [Outcome] is a [Success], or calls [onFailure] to handle
  * upstream [Failure]s and emit a replacement value downstream.
  */
-public inline fun <V, C, R> Flow<Outcome<V, C>>.use(
+public inline fun <V, C, R> Flow<Outcome<V, C>>.get(
     crossinline onSuccess: (value: V) -> R,
     crossinline onFailure: (failure: Failure<C>) -> R,
-): Flow<R> = map { outcome -> outcome.use(onSuccess, onFailure) }
+): Flow<R> = map { outcome -> outcome.get(onSuccess, onFailure) }
 
 /**
  * Converts `this` [Flow] into a [Flow] of values returned by [onSuccess] if
@@ -79,7 +79,7 @@ public inline fun <V, C, R> Flow<Outcome<V, C>>.use(
  * @see transform
  */
 @OptIn(ExperimentalTypeInference::class)
-public inline fun <V, C, R> Flow<Outcome<V, C>>.use(
+public inline fun <V, C, R> Flow<Outcome<V, C>>.get(
     crossinline onSuccess: (value: V) -> R,
     @BuilderInference
     crossinline onFailure: suspend FlowCollector<R>.(failure: Failure<C>) -> Unit,
@@ -95,16 +95,16 @@ public inline fun <V, C, R> Flow<Outcome<V, C>>.use(
  * [value][Success.value]s if the upstream [Outcome] is a [Success], or calls
  * [onFailure] to handle upstream [Failure]s and emit `null` downstream.
  */
-public inline fun <V, C> Flow<Outcome<V, C>>.useOrNull(
+public inline fun <V, C> Flow<Outcome<V, C>>.getOrNull(
     crossinline onFailure: (failure: Failure<C>) -> Unit = {},
-): Flow<V?> = map { outcome -> outcome.useOrNull(onFailure) }
+): Flow<V?> = map { outcome -> outcome.getOrNull(onFailure) }
 
 /**
  * Converts `this` [Flow] into a [Flow] of values returned by [onSuccess] if
  * the upstream [Outcome] is a [Success], or calls [onFailure] to handle
  * upstream [Failure]s and emit `null` downstream.
  */
-public inline fun <V, C, R> Flow<Outcome<V, C>>.useOrNull(
+public inline fun <V, C, R> Flow<Outcome<V, C>>.getOrNull(
     crossinline onSuccess: (value: V) -> R,
     crossinline onFailure: (failure: Failure<C>) -> Unit = {},
-): Flow<R?> = map { outcome -> outcome.useOrNull(onSuccess, onFailure) }
+): Flow<R?> = map { outcome -> outcome.getOrNull(onSuccess, onFailure) }
