@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.jnnkmsr.outcome:outcome:<version>")
+    implementation("com.github.jnnkmsr:outcome:<version>")
 }
 ```
 
@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.jnnkmsr.outcome:outcome:<version>'
+    implementation 'com.github.jnnkmsr:outcome:<version>'
 }
 ```
 

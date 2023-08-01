@@ -22,6 +22,6 @@ plugins {
 }
 
 subprojects {
-    group = "com.github.jnnkmsr.outcome"
+    group = "com.github.jnnkmsr"
     version = "0.1.0-alpha"
 }
