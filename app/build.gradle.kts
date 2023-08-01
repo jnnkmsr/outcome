@@ -76,5 +76,6 @@ dependencies {
     implementation(libs.compose.lifecycle)
     implementation(libs.compose.accompanist.systemuicontroller)
 
-    implementation(project(":outcome"))
+    implementation(project(":outcome-core"))
+    implementation(project(":outcome-flow"))
 }

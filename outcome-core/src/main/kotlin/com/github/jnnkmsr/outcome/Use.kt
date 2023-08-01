@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+package com.github.jnnkmsr.outcome
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
+/**
+ * Returns the [Outcome] of the given [block] if `this` previous [Outcome] was
+ * a [Success], or returns `this` [Failure].
+ */
+public inline fun <V, C, R> Outcome<V, C>.use(
+    block: (value: V) -> Outcome<R, C>,
+): Outcome<R, C> = when (this) {
+    is Success -> block(value)
+    is Failure -> this
 }
-
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-rootProject.name = "OutcomeLibrary"
-include(":app")
-include(":outcome-core")
-include(":outcome-flow")

@@ -19,7 +19,8 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.jnnkmsr.outcome:outcome:<version>")
+    implementation("com.github.jnnkmsr.outcome:outcome-core:<version>")
+    implementation("com.github.jnnkmsr.outcome:outcome-flow:<version>")
 }
 ```
 
@@ -31,7 +32,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.jnnkmsr.outcome:outcome:<version>'
+    implementation 'com.github.jnnkmsr.outcome:outcome-core:<version>'
+    implementation 'com.github.jnnkmsr.outcome:outcome-flow:<version>'
 }
 ```
 

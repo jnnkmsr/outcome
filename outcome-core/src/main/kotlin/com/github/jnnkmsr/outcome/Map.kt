@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+package com.github.jnnkmsr.outcome
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
-
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-rootProject.name = "OutcomeLibrary"
-include(":app")
-include(":outcome-core")
-include(":outcome-flow")
+/**
+ * Maps the encapsulated [value][Success.value] using the given [transform] if
+ * `this` [Outcome] is a [Success], or returns `this` [Failure]
+ */
+public inline fun <V, C, R> Outcome<V, C>.map(
+    transform: (value: V) -> R,
+): Outcome<R, C> = use { value -> Success(transform(value)) }
