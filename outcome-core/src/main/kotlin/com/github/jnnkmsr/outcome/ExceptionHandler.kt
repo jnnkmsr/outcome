@@ -48,7 +48,7 @@ public fun interface ExceptionHandler<out C> {
  * @param block Callback returned a value that will be wrapped into a [Success]
  *   instance when the block returns without throwing any [Exception].
  */
-public fun <V, C> Outcome(
+public inline fun <V, C> Outcome(
     handler: ExceptionHandler<C>,
     block: () -> V,
 ): Outcome<V, C> = Outcome(handler::invoke, block)
