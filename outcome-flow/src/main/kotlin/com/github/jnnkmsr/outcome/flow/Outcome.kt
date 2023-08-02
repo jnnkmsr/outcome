@@ -40,7 +40,9 @@ import kotlinx.coroutines.flow.map
  *   upstream into a [Failure] instance.
  */
 public inline fun <V, C> Flow<V>.asOutcome(
-    crossinline catch: (Exception) -> Failure<C>,
+    crossinline catch: suspend (Exception) -> Failure<C>,
 ): Flow<Outcome<V, C>> = this
     .map { value -> Success(value) }
-    .catch { throwable -> throwable.catchAsFailure(catch) }
+    .catch { throwable ->
+        throwable.catchAsFailure { exception -> catch(exception) }
+    }
