@@ -55,8 +55,10 @@ public inline fun <V : R, R, C> Flow<Outcome<V, C>>.get(
  * downstream.
  */
 public inline fun <V : R, R, C> Flow<Outcome<V, C>>.getOrElse(
-    crossinline onFailure: (failure: Failure<C>) -> R,
-): Flow<R> = map { outcome -> outcome.getOrElse(onFailure) }
+    crossinline onFailure: suspend (failure: Failure<C>) -> R,
+): Flow<R> = map { outcome ->
+    outcome.getOrElse { failure -> onFailure(failure) }
+}
 
 /**
  * Converts `this` [Flow] into a [Flow] of the encapsulated
@@ -64,5 +66,7 @@ public inline fun <V : R, R, C> Flow<Outcome<V, C>>.getOrElse(
  * [onFailure] to handle upstream [Failure]s and emit `null` downstream.
  */
 public inline fun <V, C> Flow<Outcome<V, C>>.getOrNull(
-    crossinline onFailure: (failure: Failure<C>) -> Unit = {},
-): Flow<V?> = map { outcome -> outcome.getOrNull(onFailure) }
+    crossinline onFailure: suspend (failure: Failure<C>) -> Unit = {},
+): Flow<V?> = map { outcome ->
+    outcome.getOrNull { onFailure(it) }
+}
