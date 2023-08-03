@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.kotlin.jvm) apply false
-}
+package com.github.jnnkmsr.outcome
 
-subprojects {
-    group = "com.github.jnnkmsr.outcome"
-    version = "0.1.4-alpha"
-}
+/**
+ * Invokes the given [block] if `this` [Outcome] is a [Success]. Then returns
+ * `this` [Outcome] unchanged.
+ */
+public inline fun <V, C> Outcome<V, C>.onSuccess(
+    block: (value: V) -> Unit,
+): Outcome<V, C> = also { if (this is Success) block(value) }
+
+/**
+ * Invokes the given [block] if `this` [Outcome] is a [Failure]. Then returns
+ * `this` [Outcome] unchanged.
+ */
+public inline fun <V, C> Outcome<V, C>.onFailure(
+    block: (failure: Failure<C>) -> Unit,
+): Outcome<V, C> = also { if (this is Failure) block(this) }
