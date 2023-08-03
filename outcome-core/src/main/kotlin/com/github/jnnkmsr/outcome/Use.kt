@@ -17,10 +17,22 @@
 package com.github.jnnkmsr.outcome
 
 /**
- * Returns the [Outcome] of the given [block] if `this` previous [Outcome] was
- * a [Success], or returns `this` [Failure].
+ * Executes the given [block] if `this` previous [Outcome] was a [Success],
+ * returning `this` [Success] or any [Failure] returned by [block], or returns
+ * `this` [Outcome] if it is a [Failure].
  */
-public inline fun <V, R, C> Outcome<V, C>.use(
+public inline fun <V, C> Outcome<V, C>.use(
+    block: (value: V) -> Outcome<*, C>,
+): Outcome<V, C> = when (this) {
+    is Success -> block(value).mapValue { value }
+    is Failure -> this
+}
+
+/**
+ * Returns the [Outcome] of the given [block] if `this` previous [Outcome] was
+ * a [Success], or returns `this` [Outcome] if it is a [Failure].
+ */
+public inline fun <V, R, C> Outcome<V, C>.useAndMap(
     block: (value: V) -> Outcome<R, C>,
 ): Outcome<R, C> = when (this) {
     is Success -> block(value)

@@ -22,7 +22,7 @@ package com.github.jnnkmsr.outcome
  */
 public inline fun <V, R, C> Outcome<V, C>.mapValue(
     transform: (value: V) -> R,
-): Outcome<R, C> = use { value -> Success(transform(value)) }
+): Outcome<R, C> = useAndMap { value -> Success(transform(value)) }
 
 /**
  * Returns a an [Outcome] with `Unit` [value][Success.value], keeping
