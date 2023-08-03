@@ -20,16 +20,28 @@ import com.github.jnnkmsr.outcome.Failure
 import com.github.jnnkmsr.outcome.Outcome
 import com.github.jnnkmsr.outcome.Success
 import com.github.jnnkmsr.outcome.use
+import com.github.jnnkmsr.outcome.useAndMap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+
+/**
+ * Uses the [value][Success.value] of an upstream [Success] to execute the given
+ * [block], emitting the upstream [Success] unchanged or any [Failure] returned
+ * by [block], or emits any upstream [Failure].
+ */
+public inline fun <V, C> Flow<Outcome<V, C>>.use(
+    crossinline block: suspend (value: V) -> Outcome<*, C>,
+): Flow<Outcome<V, C>> = map { outcome ->
+    outcome.use { value -> block(value) }
+}
 
 /**
  * Uses the [value][Success.value] of an upstream [Success] to emit the
  * [Outcome] of the given [block] into the downstream [Flow], while emitting
  * upstream [Failure]s unchanged.
  */
-public inline fun <V, R, C> Flow<Outcome<V, C>>.use(
+public inline fun <V, R, C> Flow<Outcome<V, C>>.useAndMap(
     crossinline block: suspend (value: V) -> Outcome<R, C>,
 ): Flow<Outcome<R, C>> = map { outcome ->
-    outcome.use { value -> block(value) }
+    outcome.useAndMap { value -> block(value) }
 }
